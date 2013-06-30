@@ -1,154 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<title>transform: add cross-browser 2d transform capabilities to jQuery css() and animate()</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css" />
-	<link href='http://fonts.googleapis.com/css?family=Josefin+Slab:bold' rel='stylesheet' type='text/css'>
-</head>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
 
-<body>
-	<a href="http://github.com/louisremi/jquery.transform.js">
-		<img alt="Fork me on GitHub" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" style="position: absolute; top: 0; right: 0; border: 0;">
-	</a>
-	
-	<header>
-		<h1>jquery.transform.js</h1>
-		<p>cross-browser 2d transform plugin</p>
-	</header>
-	
-	<section id="basic">
-		<h2>Basic usage</h2>
-		<ul>
-			<li><pre class="prettyprint lang-js">$(elem).animate({
-  transform: 'translateX(50px)'
-});</pre>
-			<li><pre class="prettyprint lang-js">$(elem).animate({
-  transform: 'rotate(135deg)'
-});</pre>
-			<li><pre class="prettyprint lang-js">$(elem).animate({
-  transform: 'scale(2,.5)'
-});</pre>
-			<li><pre class="prettyprint lang-js">$(elem).animate({
-  transform: 'skewX(35deg) skewY(15deg)'
-});</pre>
-		</ul>
-		<div style="position: relative;" class="square fleft">
-			<div id="basic1" class="square color1" style="position: absolute; margin-left: 0;" data-trans="translateX(50px)"></div>
-		</div>
-		<div id="basic2" class="square color2 fleft" data-trans="rotate(135deg)"></div>
-		<div id="basic3" class="square color3 fleft" data-trans="scale(2,.5)"></div>
-		<div id="basic4" class="square color4 fleft" data-trans="skewX(35deg) skewY(15deg)"></div>
-	</section>
-	
-	<section id="advanced">
-		<h2>Advanced usage</h2>
-		<pre class="prettyprint lang-js">// Combine transform components to create isometric 3d transform.
-var transforms = [
-    'skewY(-45deg) scale(.66)',
-    'translate(20px) skewY(-45deg) scale(.66)',
-    'translate(150px,50px) scale(1.5,1)',
-    'translate(280px) skewY(45deg) scale(.66)',
-    'translate(300px) skewY(45deg) scale(.66)'
-  ],
-  $squares = $('.square').each(function(i) {
-    $(this).css({ transform: transforms[i] });
-  });
-$('#cover').mouseenter(function() {
-  $squares.each(function(i) {
-    $(this).animate({ transform: transforms[i+1] });
-  });
-}).mouseleave(function() {
-  $squares.each(function(i) {
-    $(this).animate({ transform: transforms[i] });
-  });
-});
-</pre>
-		<div id="basic5678" style="height: 150px; width: 400px; position: relative;">
-			<div id="basic5" class="square cover color5"></div>
-			<div id="basic6" class="square cover color6"></div>
-			<div id="basic7" class="square cover color7" style="z-index: 2"></div>
-			<div id="basic8" class="square cover color8"></div>
-		</div>
-	</section>
-	
-	<!--<section id="relative">
-		<h2>Relative animations</h2>
-		<pre class="prettyprint lang-js">$(this).animate({
-  transform: 'rotate(90deg) translate(100px)'
-}, function() {
-  $(this).delay(500).animate({
-    transform: $(this).css('transform') + ' rotate(90deg) translate(100px)'
-  });
-});</pre>
-		<div id="basic9" class="square color9"></div>
-	</section>-->
-	
-	<footer>
-		by @<a href="http://twitter.com/louis_remi">Louis_Remi</a>
-	</footer>
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
-	<script src="jquery.transform2d.js"></script>
-	<script type="text/javascript" src="js/prettify.js"></script>
-	<script>
-		$(function() {
-			prettyPrint();
-			
-			$('#basic').delegate('.square', 'mouseenter', function() {
-				if ( !$(this).queue("fx").length ) {
-					$(this).animate({
-						transform: $(this).data('trans')
-					}).rewind();
-				}
-			});
-			
-			var transforms = [
-					'scale(.66) skewY(-45deg)',
-					'translate(20px) scale(.66) skewY(-45deg)',
-					'translate(150px,50px) scale(1.5,1)',
-					'translate(280px) scale(.66) skewY(45deg)',
-					'translate(300px) scale(.66) skewY(45deg)'
-				],
-				$squares = $('#basic5678 .square').each(function(i) {
-					$(this).css({ transform: transforms[i] });
-				});
-			$('#basic5678').mouseenter(function() {
-				$squares.each(function(i) {
-					$(this).animate({ transform: transforms[i+1] });
-				});
-			}).mouseleave(function() {
-				$squares.each(function(i) {
-					$(this).animate({ transform: transforms[i] });
-				});
-			});
-			
-			/*$('#basic9').mouseenter(function() {
-				if ( !$(this).queue("fx").length ) {
-					$(this).animate({
-						transform: 'rotate(90deg) translate(100px)'
-					}, function() {
-						$(this).delay(500).animate({
-							transform: $(this).css('transform') + ' rotate(90deg) translate(100px)'
-						}).rewind();
-					});
-				}
-			});*/
-			
-			$.fn.rewind = function() {
-				return this.each(function() {
-					$(this).delay(
-						2000
-					).queue(function() {
-						$(this).css('opacity', .5).dequeue();
-					}).animate({
-						transform: ''
-					}).queue(function() {
-						$(this).css('opacity', 1).dequeue();
-					});
-				})
-			};
-		});
-	</script>
-</body>
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Jquery.transform.js by bpgs</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/bpgs/jquery.transform.js">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Jquery.transform.js</h1>
+            <h2>jQuery cssHooks adding a cross browser transform property to $.fn.css() and $.fn.animate()</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/bpgs/jquery.transform.js/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/bpgs/jquery.transform.js/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <p>jquery.transform2d.js adds 2d transform capabilities to jQuery <code>css()</code> and <code>animate()</code> functions.</p>
+
+<p><a href="http://louisremi.github.com/jquery.transform.js/index.html">Demo</a></p>
+
+<h1>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage:</h1>
+
+<h2>
+<a name="set-transform-with-a-string" class="anchor" href="#set-transform-with-a-string"><span class="octicon octicon-link"></span></a>Set transform with a string</h2>
+
+<pre><code>$(elem).css('transform', 'translate(50px, 30px) rotate(25deg) scale(2,.5) skewX(-35deg)');
+$(elem).animate({transform: 'translateY(-100px) rotate(1rad) scaleX(2) skewY(42deg)'});
+</code></pre>
+
+<p>You can use the following list of transform functions:  </p>
+
+<ul>
+<li>
+<code>translateX(&lt;number&gt;px)</code><br>
+</li>
+<li>
+<code>translateY(&lt;number&gt;px)</code><br>
+</li>
+<li>combined: <code>translate(&lt;number&gt;px, &lt;number&gt;px)</code> <em>the second number is optional and defaults to 0</em><br>
+</li>
+<li>
+<code>scaleX(&lt;number&gt;)</code><br>
+</li>
+<li>
+<code>scaleY(&lt;number&gt;)</code><br>
+</li>
+<li>combined: <code>scale(&lt;number&gt;, &lt;number&gt;)</code> <em>the second number is optional and defaults to the value of the first one</em><br>
+</li>
+<li>
+<code>rotate(&lt;angle&gt;)</code> <em>units for angles are *rad</em> (default), <em>deg</em> or <em>grad</em>.*<br>
+</li>
+<li>
+<code>skewX(&lt;angle&gt;)</code><br>
+</li>
+<li>
+<code>skewY(&lt;angle&gt;)</code><br>
+</li>
+<li>
+<code>matrix(&lt;number&gt;, &lt;number&gt;, &lt;number&gt;, &lt;number&gt;, &lt;number&gt;, &lt;number&gt;)</code>*</li>
+</ul><p>*<code>matrix</code> gives you more control about the resulting transformation, using a <a href="http://www.useragentman.com/matrix/">matrix construction set</a>.<br>
+When using it in animations however, it makes it impossible to predict how the current and target transformations are going to be interpolated; there is no way to tell whether elements are going to rotate clockwise or anti-clockwise for instance.</p>
+
+<h2>
+<a name="get-transform" class="anchor" href="#get-transform"><span class="octicon octicon-link"></span></a>Get transform</h2>
+
+<p>returns a computed transform matrix.</p>
+
+<pre><code>$(elem).css('transform') == 'matrix(0,1,-1,0,100,50)';
+</code></pre>
+
+<h2>
+<a name="relative-animations" class="anchor" href="#relative-animations"><span class="octicon octicon-link"></span></a>Relative animations</h2>
+
+<p>Relative animations are possible by prepending "+=" to the transform string.</p>
+
+<pre><code>$(elem).css('transform', 'rotate(45deg)');
+// using the following syntax, elem will always rotate 90deg anticlockwise
+$(elem).animate({transform: '+=rotate(-90deg)'});
+</code></pre>
+
+<h1>
+<a name="limitations" class="anchor" href="#limitations"><span class="octicon octicon-link"></span></a>Limitations:</h1>
+
+<ul>
+<li>requires jQuery 1.4.3+,</li>
+<li>Should you use the <em>translate</em> property, then your elements need to be absolutely positionned in a relatively positionned wrapper <strong>or it will fail in IE</strong>,</li>
+<li>transformOrigin is not accessible.</li>
+</ul><h2>
+<a name="why-such-restrictions-with-translate" class="anchor" href="#why-such-restrictions-with-translate"><span class="octicon octicon-link"></span></a>Why such restrictions with 'translate'?</h2>
+
+<p>Since translate is unavailable in IE&lt;9, we have to emulate it using <em>top</em> and <em>left</em> properties of the element style.<br>
+This can, of course, only work if the elements are absolutely positionned in a relatively positionned wrapper.  </p>
+
+<p>Other plugins position the elements and wrap them transparently.<br>
+I think that transparently messing with the DOM often introduces unpredictible behavior.<br>
+Unpredictible behavior leads developpers to fear plugins.<br><em>Fear leads to anger. Anger leads to hate. Hate leads to suffering.</em><br>
+I prefer leaving this up to you.</p>
+
+<h1>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
+
+<p>Dual licensed under GPL and MIT licenses.</p>
+
+<p>Copyright (c) 2010 <a href="http://twitter.com/louis_remi">Louis-Rémi Babé</a>.</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/bpgs">bpgs</a> can be found on <a href="https://github.com/bpgs/jquery.transform.js">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
 </html>
